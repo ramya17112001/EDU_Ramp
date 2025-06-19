@@ -1,39 +1,61 @@
-package com.project;
+package com.day9;
+
+import java.util.Scanner;
 
 public class Main {
+	public static void main(String[] args) {
+	       NotificationManager manager = new NotificationManager();
+	       Scanner scanner = new Scanner(System.in);
+	       int choice;  
 
-	    public static void main(String[] args) {
-	        Market market = new Market();
-            market.addStock(new Stock("S1", "TCS", 3200.0,100));
-	        market.addStock(new Stock("S2", "Infosys", 1450.0, 150));
-	        market.addStock(new Stock("S3", "Infovision", 2500.0, 120));
+	       do {
+	           System.out.println("\n--- Notification Manager ---");
+	           System.out.println("1. Add Notification");
+	           System.out.println("2. View Notifications");
+	           System.out.println("3. Remove Notification");
+	           System.out.println("4. Exit");
+	           System.out.print("Enter choice: ");
+	           while (!scanner.hasNextInt()) {
+	               System.out.print("Please enter a valid number: ");
+	               scanner.next();
+	           }
+	           choice = scanner.nextInt();
+	           scanner.nextLine();
 
-	        Trader t1 = new Trader(1, "ram", market);
-	        Trader t2 = new Trader(2, "ravi", market);
-	        Trader t3 = new Trader(3, "venkat", market);
- 
-	        t1.start();  
-	        t2.start();
-	        t3.start(); 
+	           switch (choice) {
+	               case 1:
+	                   System.out.print("Enter notification message: ");
+	                   String message = scanner.nextLine();
+	                   manager.addNotification(message);
+	                   break;
+	               case 2:
+	                   manager.viewNotifications();
+	                   break;
+	               case 3:
+	                   System.out.print("Enter notification index to remove: ");
+	                   while (!scanner.hasNextInt()) {
+	                       System.out.print("Please enter a valid number: ");
+	                       scanner.next();
+	                   }
+	                   int index = scanner.nextInt();
+	                   manager.removeNotification(index);
+	                   break;
+	               case 4:
+	                   System.out.println(" Exiting...");
+	                   break;
+	               default:
+	                   System.out.println(" Invalid choice.");
+	           }
 
-	        try {
-	            t1.join();
-	            t2.join();
-	            t3.join();
-	        } catch (InterruptedException e) {
-	            System.err.println("Main thread interrupted.");
-	        }
+	       } while (choice != 4);
 
-	        System.out.println("\n--- Final Portfolio Summary ---");
-	        t1.displayPortfolio();
-	        t2.displayPortfolio();
-	        t3.displayPortfolio();
+	       scanner.close();
+	   }
+	}
 
-	        System.out.println("\n--- Remaining Stocks in Market ---");
-	        for (Stock stock : market.getAllStocks()) {
-	            System.out.println(stock);
-	        }
-	    }   
-	}    
- 
+
+
+
+
+
 
