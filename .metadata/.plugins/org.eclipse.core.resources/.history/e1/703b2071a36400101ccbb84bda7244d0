@@ -1,0 +1,9 @@
+package com.plan_service.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.plan_service.entity.Plan;
+
+public interface PlanRepository extends JpaRepository<Plan,Long> {
+
+} 

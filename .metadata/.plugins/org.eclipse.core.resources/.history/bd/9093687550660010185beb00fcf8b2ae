@@ -1,0 +1,55 @@
+package com.billing_service.dto;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import lombok.Data;
+
+@Data
+public class BillDTO {
+	
+	    private Long id;
+	    private String userId;
+	    private String billingMonth;
+	    private BigDecimal amount;
+	    private LocalDateTime generatedAt;
+		public Long getId() {
+			return id;
+		}
+		public void setId(Long id) {
+			this.id = id;
+		}
+		public String getUserId() {
+			return userId;
+		}
+		public void setUserId(String userId) {
+			this.userId = userId;
+		}
+		public String getBillingMonth() {
+			return billingMonth;
+		}
+		public void setBillingMonth(String billingMonth) {
+			this.billingMonth = billingMonth;
+		}
+		public BigDecimal getAmount() {
+			return amount;
+		}
+		public void setAmount(BigDecimal amount) {
+			this.amount = amount;
+		}
+		public LocalDateTime getGeneratedAt() {
+			return generatedAt;
+		}
+		public void setGeneratedAt(LocalDateTime generatedAt) {
+			this.generatedAt = generatedAt;
+		}
+		public BillDTO(Long id, String userId, String billingMonth, BigDecimal amount, LocalDateTime generatedAt) {
+			super();
+			this.id = id;
+			this.userId = userId;
+			this.billingMonth = billingMonth;
+			this.amount = amount;
+			this.generatedAt = generatedAt;
+		} 
+	    
+}

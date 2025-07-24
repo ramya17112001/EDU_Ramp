@@ -1,0 +1,8 @@
+package com.plan_service.exception;
+public class PlanNotFoundException extends RuntimeException{
+public PlanNotFoundException(Long id) {
+    super("Plan not found: " + id);
+} 
+
+    
+}

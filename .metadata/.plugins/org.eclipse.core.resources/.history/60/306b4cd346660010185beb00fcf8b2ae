@@ -1,0 +1,19 @@
+package com.usage_service.scheduler;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import com.usage_service.service.UsageLogSimulatorService;
+
+@Component
+public class UsageSimulatorScheduler {
+	 @Autowired
+	    private UsageLogSimulatorService simulatorService;
+
+	    // Run every 1 minute to simulate usage logs
+	    @Scheduled(fixedRate = 60000)
+	    public void runSimulation() {
+	        //simulator
+	    }}
+

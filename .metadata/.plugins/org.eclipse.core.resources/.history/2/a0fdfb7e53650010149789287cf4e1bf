@@ -1,0 +1,27 @@
+package com.GatewayT_service.config;
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+@Configuration
+public class GatewayConfig {
+	 @Bean
+	    public RouteLocator gatewayRoutes(RouteLocatorBuilder builder, JwtAuthFilter jwtFilter) {
+	        return builder.routes()
+	            .route("user", r -> r.path("/users/**")
+	                .filters(f -> f.filter(jwtFilter))
+	                .uri("lb://user-service"))
+	            .route("plan", r -> r.path("/api/plans/**")
+	                .filters(f -> f.filter(jwtFilter))
+	                .uri("lb://plan-service"))
+	            .route("usage", r -> r.path("/api/usage/**")
+	                .filters(f -> f.filter(jwtFilter))
+	                .uri("lb://usage-service"))
+	            .route("billing", r -> r.path("/billing/**")
+	                .filters(f -> f.filter(jwtFilter))
+	                .uri("lb://billing-service"))
+	            .route("auth", r -> r.path("/auth/**")
+	                .uri("lb://auth-service"))
+	            .build();
+	    }}  
+	   

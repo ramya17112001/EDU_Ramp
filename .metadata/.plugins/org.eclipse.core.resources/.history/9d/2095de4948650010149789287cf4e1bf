@@ -1,0 +1,152 @@
+package com.plan_service.service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.plan_service.dto.PlanDTO;
+import com.plan_service.dto.PlanRequest;
+import com.plan_service.entity.Plan;
+import com.plan_service.entity.PlanType;
+import com.plan_service.exception.PlanNotFoundException;
+import com.plan_service.factory.PlanFactory;
+import com.plan_service.repository.PlanRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class PlanService {
+	 @Autowired
+	    private PlanRepository planRepository;
+
+	    @Autowired
+	    private ModelMapper modelMapper;
+
+	    // ✅ Get all plans (with optional filter by type)
+	    public List<PlanDTO> getAll(String type) {
+	        List<Plan> plans = (type != null) ? planRepository.findByType(type) : planRepository.findAll();
+	        return plans.stream()
+	                .map(plan -> modelMapper.map(plan, PlanDTO.class))
+	                .collect(Collectors.toList());
+	    }
+
+	    // ✅ Create new plan
+	    public PlanDTO create(PlanDTO dto) {
+	        Plan plan = modelMapper.map(dto, Plan.class);
+	        Plan saved = planRepository.save(plan);
+	        return modelMapper.map(saved, PlanDTO.class);
+	    }
+
+	    // ✅ Update plan
+	    public PlanDTO update(Long id, PlanDTO dto) {
+	        Plan plan = planRepository.findById(id)
+	                .orElseThrow(() -> new PlanNotFoundException("Plan not found with id: " + id));
+
+	        plan.setName(dto.getName());
+	        plan.setType(dto.getType());
+	        plan.setPrice(dto.getPrice());
+	        plan.setValidity(dto.getValidity());
+	        plan.setFeatures(dto.getFeatures());
+
+	        Plan updated = planRepository.save(plan);
+	        return modelMapper.map(updated, PlanDTO.class);
+	    }
+
+	    // ✅ Delete plan
+	    public void delete(Long id) {
+	        if (!planRepository.existsById(id)) {
+	            throw new PlanNotFoundException("Plan not found with id: " + id);
+	        }
+	        planRepository.deleteById(id);
+	    }
+	}
+}
+//	@Autowired private PlanRepository repo;
+//    @Autowired private ModelMapper mapper;
+//
+//    public List<PlanDTO> getAll(String type) {
+//        List<Plan> plans = (type == null) ? repo.findAll() : repo.findByType(type);
+//        return plans.stream().map(p -> mapper.map(p, PlanDTO.class)).toList();
+//    }
+//
+//    public PlanDTO create(PlanDTO dto) {
+//        Plan saved = repo.save(mapper.map(dto, Plan.class));
+//        return mapper.map(saved, PlanDTO.class);
+//    }
+//
+//    public PlanDTO update(Long id, PlanDTO dto) {
+//        Plan plan = repo.findById(id).orElseThrow(() -> new PlanNotFoundException(id));
+//        plan.setName(dto.getName());
+//        plan.setPrice(dto.getPrice());
+//        plan.setType(dto.getType());
+//        plan.setValidity(dto.getValidity());
+//        plan.setFeatures(dto.getFeatures());
+//        return mapper.map(repo.save(plan), PlanDTO.class);
+//    }
+//
+//    public void delete(Long id) {
+//        if (!repo.existsById(id)) throw new PlanNotFoundException(id);
+//        
+//repo.deleteById(id);
+//    }
+//}
+	
+//	private final PlanRepository planRepository;
+//    private final PlanFactory planFactory;
+//    private final ModelMapper modelMapper;
+//    @Autowired 
+//    public PlanService(PlanRepository planRepository, PlanFactory planFactory, ModelMapper modelMapper) {
+//        this.planRepository = planRepository;
+//        this.planFactory = planFactory;
+//        this.modelMapper = modelMapper;
+//    }
+//
+//    public PlanDTO addPlan(PlanRequest request) {
+//        Plan plan = planFactory.createPlan(request);
+//        Plan saved = planRepository.save(plan);
+//        return modelMapper.map(saved, PlanDTO.class);
+//    } 
+//
+//    public List<PlanDTO> getAllPlans() {
+//        return planRepository.findAll().stream()
+//                .map(plan -> modelMapper.map(plan, PlanDTO.class))
+//                .collect(Collectors.toList());
+//    }
+//
+//    public PlanDTO getPlanById(Long id) {
+//        Plan plan = planRepository.findById(id)
+//                .orElseThrow(() -> new PlanNotFoundException("Plan not found with id: " + id));
+//        return modelMapper.map(plan, PlanDTO.class);
+//    }
+//
+//    public PlanDTO updatePlan(Long id, PlanRequest request) {
+//        Plan existing = planRepository.findById(id)
+//                .orElseThrow(() -> new PlanNotFoundException("Plan not found with id: " + id));
+//
+//        existing.setName(request.getName());
+//        //existing.setType(request.getType());
+//        existing.setType(PlanType.valueOf(request.getType().toUpperCase())); // ✅ safely convert String to Enum
+//
+//        existing.setPrice(request.getPrice());
+//      // existing.setValidityDays(Integer.parseUnsignedInt(request.getValidityDays()));
+//       // existing.setValidityDays(request.getValidityDays()); // ✅ now this works
+//        existing.setValidityDays(request.getValidityDays());
+//
+//        //existing.setValidity(request.getValidity());
+//        existing.setFeatures(request.getFeatures());
+//
+//        Plan updated = planRepository.save(existing);
+//        return modelMapper.map(updated, PlanDTO.class);
+//    }
+//
+//    public void deletePlan(Long id) {
+//        if (!planRepository.existsById(id)) {
+//            throw new PlanNotFoundException("Plan not found with id: " + id);
+//        }
+//        planRepository.deleteById(id);
+//    }
+//}

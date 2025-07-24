@@ -1,0 +1,5 @@
+package com.usage_service.exception;
+
+public class UsageNotFoundException {
+
+}

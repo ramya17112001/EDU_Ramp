@@ -1,0 +1,71 @@
+package com.billing_service.service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.billing_service.dto.BillDTO;
+import com.billing_service.entity.Bill;
+import com.billing_service.exception.BillingException;
+import com.billing_service.repository.BillRepository;
+
+@Service
+public class BillingService {
+	@Autowired private BillRepository repo;
+    @Autowired private ModelMapper mapper;
+    public BillDTO generateBill(String userId, YearMonth month) {
+        if (repo.findByUserIdAndBillingMonth(userId, month).isPresent()) {
+            throw new BillingException("Bill already exists for " + month);
+        }
+
+        BigDecimal usageCost = BigDecimal.valueOf(month.lengthOfMonth() * 2);
+        BigDecimal total = usageCost.add(BigDecimal.valueOf(50));
+
+        Bill bill = Bill.builder()
+            .userId(userId)
+            .billingMonth(month)
+            .amount(total)
+            .generatedAt(LocalDateTime.now())
+            .build();
+
+        return mapper.map(repo.save(bill), BillDTO.class);
+    }
+
+    public BillDTO getBillById(Long id) {
+        Bill bill = repo.findById(id).orElseThrow(() -> new BillingException("Bill not found"));
+        return mapper.map(bill, BillDTO.class);
+    }
+
+    public List<BillDTO> getHistory(String userId) {
+        return repo.findAllByUserId(userId)
+                   .stream()
+                   .map(b -> mapper.map(b, BillDTO.class))
+                   .collect(Collectors.toList());
+    }
+
+    public List<BillDTO> getAllBills() {
+        return repo.findAll()
+                   .stream()
+                   .map(b -> mapper.map(b, BillDTO.class))
+                    .collect(Collectors.toList());
+    }
+
+    public BillDTO updateBill(Long id, BillDTO dto) {
+        Bill bill = repo.findById(id).orElseThrow(() -> new BillingException("Bill not found"));
+        bill.setAmount(dto.getAmount());
+        bill.setBillingMonth(YearMonth.parse(dto.getBillingMonth()));
+        return mapper.map(repo.save(bill), BillDTO.class);
+    }
+
+    public void deleteBill(Long id) {
+        Bill bill = repo.findById(id).orElseThrow(() -> new BillingException("Bill not found"));
+        repo.delete(bill);
+    }
+}
+ 

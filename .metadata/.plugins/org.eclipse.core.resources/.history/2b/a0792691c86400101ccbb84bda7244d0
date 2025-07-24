@@ -1,0 +1,64 @@
+package com.user_service.service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.user_service.dto.UpdatePlanRequest;
+import com.user_service.dto.UserDTO;
+import com.user_service.dto.UserRequest;
+import com.user_service.exception.UserNotFoundException;
+import com.user_service.model.User;
+import com.user_service.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+	
+	 private final UserRepository repo;
+
+	    private final ModelMapper mapper;
+	 @Autowired
+	 public UserService(UserRepository repo, ModelMapper mapper) {
+		 this.mapper=mapper;
+	        this.repo = repo;
+	    }     
+	  
+
+	  public UserDTO create(UserRequest req) {
+	    User u = mapper.map(req, User.class);
+	    u.setRole("CUSTOMER");
+	    User saved = repo.save(u);
+	    return mapper.map(saved, UserDTO.class);
+	  }
+
+	  public List<UserDTO> findAll() {
+	    return repo.findAll().stream()
+	      .map(u -> mapper.map(u, UserDTO.class))
+	      .collect(Collectors.toList());
+	  }
+
+	  public UserDTO findById(Long id) {
+	    User u = repo.findById(id)
+	      .orElseThrow(() -> new UserNotFoundException(id));
+	    return mapper.map(u, UserDTO.class);
+	  }
+
+	  public UserDTO updatePlan(Long id, UpdatePlanRequest req) {
+	    User u = repo.findById(id)
+	      .orElseThrow(() -> new UserNotFoundException(id));
+	    u.setPlanId(req.getPlanId());
+	    User updated = repo.save(u);
+	    return mapper.map(updated, UserDTO.class);
+	  }   
+
+	  public void delete(Long id) {
+	    if (!repo.existsById(id)) throw new UserNotFoundException(id);
+	    repo.deleteById(id);
+	  }
+	}

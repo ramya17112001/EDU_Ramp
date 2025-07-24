@@ -1,0 +1,21 @@
+package com.plan_service.factory;
+
+import org.springframework.stereotype.Component;
+
+import com.plan_service.dto.PlanRequest;
+import com.plan_service.entity.Plan;
+import com.plan_service.entity.PlanType;
+
+@Component
+public class PlanFactory {
+	public Plan createPlan(PlanRequest req) {
+        return Plan.builder()
+                .name(req.getName())
+                .type(PlanType.valueOf(req.getType().toUpperCase()))
+                .price(req.getPrice())
+                .validityDays(req.getValidityDays())
+                .features(req.getFeatures())
+                .build();
+    } 
+
+}

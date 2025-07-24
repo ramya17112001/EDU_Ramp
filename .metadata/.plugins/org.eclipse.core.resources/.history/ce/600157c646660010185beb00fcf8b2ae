@@ -1,0 +1,8 @@
+package com.usage_service.exception;
+
+public class UsageNotFoundException extends RuntimeException {
+	  public UsageNotFoundException(Long id) {
+		    super("Usage log not found: " + id);
+		  } 
+
+} 

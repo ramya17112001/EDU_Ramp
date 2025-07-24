@@ -1,0 +1,5 @@
+package com.plan_service.dto;
+
+public class PlanRequest {
+
+}

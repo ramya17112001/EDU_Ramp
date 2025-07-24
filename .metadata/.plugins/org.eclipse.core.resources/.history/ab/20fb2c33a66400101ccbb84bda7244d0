@@ -1,0 +1,55 @@
+package com.plan_service.dto;
+
+import java.math.BigDecimal;
+
+import lombok.Data;
+
+@Data
+public class PlanRequest {
+	private String name;
+	//@NotBlank(message = "Plan type is required")
+    private String type; 
+    private BigDecimal price;
+    private Integer validityDays;
+    private String features;
+    
+	public String getName() {
+		return name;
+	} 
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public BigDecimal getPrice() {
+		return price;
+	}
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+	public Integer getValidityDays() {
+		return validityDays;
+	}
+	public void setValidityDays(Integer validityDays) {
+		this.validityDays = validityDays;
+	}
+	public String getFeatures() {
+		return features;
+	}
+	public void setFeatures(String features) {
+		this.features = features;
+	}
+	public PlanRequest(String name, String type, BigDecimal price, Integer validityDays, String features) {
+		super();
+		this.name = name;
+		this.type = type;
+		this.price = price;
+		this.validityDays = validityDays;
+		this.features = features;
+	}
+    
+}

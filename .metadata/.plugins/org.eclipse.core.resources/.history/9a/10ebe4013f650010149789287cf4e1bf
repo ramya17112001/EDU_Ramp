@@ -1,0 +1,28 @@
+package com.user_service.dto;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdatePlanRequest {
+	@NotNull private Long planId;
+
+	public Long getPlanId() {
+		return planId;
+	}
+
+	public void setPlanId(Long planId) {
+		this.planId = planId;
+	}
+
+	public UpdatePlanRequest(@NotNull Long planId) {
+		super();
+		this.planId = planId;
+	} 
+	
+}
+ 

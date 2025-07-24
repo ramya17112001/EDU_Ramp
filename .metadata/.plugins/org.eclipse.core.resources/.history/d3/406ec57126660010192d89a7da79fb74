@@ -1,0 +1,26 @@
+package com.user_service.dto;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+public class UpdateUserRequest {
+	private String name;
+    private String phone;
+    private Long planId;
+
+    // Constructors, Getters, and Setters
+    public UpdateUserRequest() {}
+
+    public UpdateUserRequest(String name, String phone, Long planId) {
+        this.name = name; this.phone = phone; this.planId = planId;
+    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public Long getPlanId() { return planId; }
+    public void setPlanId(Long planId) { this.planId = planId; }
+}    

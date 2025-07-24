@@ -1,0 +1,47 @@
+package com.usage_service.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.usage_service.dto.UsageLogDTO;
+import com.usage_service.dto.UsageRequest;
+import com.usage_service.service.UsageService123;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/usage")
+@RequiredArgsConstructor
+@Validated
+public class UsageController {
+	 private UsageService123 svc;
+
+	  @PostMapping
+	  public ResponseEntity<UsageLogDTO> record(@Validated @RequestBody UsageRequest req) {
+	    return new ResponseEntity<>(svc.record(req), HttpStatus.CREATED);
+	  }
+
+	  @GetMapping("/user/{userId}")
+	  public ResponseEntity<List<UsageLogDTO>> getByUser(@PathVariable Long userId) {
+	    return ResponseEntity.ok(svc.getByUser(userId));
+	  }
+
+	  @DeleteMapping("/{id}")
+	  public ResponseEntity<Void> delete(@PathVariable Long id) {
+	    svc.delete(id);
+	    return ResponseEntity.noContent().build();
+	  }
+	}
+
+
+ 

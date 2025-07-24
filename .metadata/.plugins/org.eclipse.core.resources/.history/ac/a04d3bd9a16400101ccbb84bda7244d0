@@ -1,0 +1,5 @@
+package com.plan_service.entity;
+
+public class Plan {
+
+}

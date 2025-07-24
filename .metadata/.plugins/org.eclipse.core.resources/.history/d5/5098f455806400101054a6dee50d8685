@@ -1,0 +1,34 @@
+package com.auth_service.util;
+
+import java.sql.Date;
+
+import org.springframework.stereotype.Component;
+
+import com.auth_service.model.User;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
+@Component
+public class JwtTokenUtil {
+	  private final String SECRET = "smarttelecom_secret_key";
+	    private final long EXPIRATION_TIME = 86400000;
+
+	    public String generateToken(User user) {
+	        return Jwts.builder()
+	                .setSubject(user.getUsername())
+	                .claim("role", user.getRole())
+	                .setIssuedAt(new Date())
+	                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+	                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS256)
+	                .compact();
+	    }
+
+	    public String extractUsername(String token) {
+	        return Jwts.parserBuilder().setSigningKey(SECRET.getBytes()).build()
+	                .parseClaimsJws(token).getBody().getSubject();
+	    }
+
+}
+ 

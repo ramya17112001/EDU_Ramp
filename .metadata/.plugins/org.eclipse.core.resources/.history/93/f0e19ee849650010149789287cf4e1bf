@@ -1,0 +1,7 @@
+spring.application.name=plan-service
+server.port=8081
+spring.datasource.url=jdbc:mysql://localhost:3306/plan_db
+spring.datasource.username=root
+spring.datasource.password=Kanny@2317
+spring.jpa.hibernate.ddl-auto=update
+

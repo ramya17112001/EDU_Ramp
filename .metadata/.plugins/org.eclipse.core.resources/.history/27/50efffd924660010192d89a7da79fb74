@@ -1,0 +1,50 @@
+package com.user_service.service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import com.user_service.model.User;
+import com.user_service.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class SchedulerService {
+    private static final Logger log = LoggerFactory.getLogger(SchedulerService.class);
+  
+	private  UserRepository userRepository;
+
+     // Runs every day at 1 AM
+    @Scheduled(cron = "0 0 1 * * *")
+    public void checkExpiringUsers() {
+        log.info("⏰ Scheduler started - checking for users with plans expiring soon");
+
+        List<User> users = userRepository.findAll();
+
+        for (User user : users) {
+            if (user.getPlanValidityDate() != null &&
+                user.getPlanValidityDate().isBefore(LocalDate.now().plusDays(5))) {
+                log.warn("🔔 User [{}] has a plan expiring on {}", user.getEmail(), user.getPlanValidityDate());
+                // You can simulate a notification here
+            }
+        }
+ 
+        log.info("✅ Scheduler finished - plan expiry check complete.");
+    }
+
+    // Weekly cleanup or summary - runs Sunday at 3 AM
+    @Scheduled(cron = "0 0 3 * * SUN")
+    public void weeklyUserSummary() {
+        long totalUsers = userRepository.count();
+        log.info("📊 Weekly Summary: Total Users = {}", totalUsers);
+    }
+
+}

@@ -1,0 +1,82 @@
+package com.usage_service.entity;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.*;  
+
+@Entity
+@Getter 
+@Setter
+@NoArgsConstructor 
+@AllArgsConstructor
+@Builder
+@Document(collection = "usage_logs")
+ 
+public class UsageLog {
+	 @Id 
+	  private String id;
+	    private String userId;
+	    private LocalDate date;
+	    private int callDuration;  // in minutes
+	    private double dataUsed;   // in MB
+	    private int smsCount;
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+		public String getUserId() {
+			return userId;
+		}
+		public void setUserId(String userId) {
+			this.userId = userId;
+		}
+		public LocalDate getDate() {
+			return date;
+		}
+		public void setDate(LocalDate date) {
+			this.date = date;
+		}
+		public int getCallDuration() {
+			return callDuration;
+		}
+		public void setCallDuration(int callDuration) {
+			this.callDuration = callDuration;
+		}
+		public double getDataUsed() {
+			return dataUsed;
+		}
+		public void setDataUsed(double dataUsed) {
+			this.dataUsed = dataUsed;
+		}
+		public int getSmsCount() {
+			return smsCount;
+		}
+		public void setSmsCount(int smsCount) {
+			this.smsCount = smsCount;
+		}
+		public UsageLog(String id, String userId, LocalDate date, int callDuration, double dataUsed, int smsCount) {
+			super();
+			this.id = id;
+			this.userId = userId;
+			this.date = date;
+			this.callDuration = callDuration;
+			this.dataUsed = dataUsed;
+			this.smsCount = smsCount;
+		}
+	    
+}

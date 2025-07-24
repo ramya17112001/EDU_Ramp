@@ -1,0 +1,5 @@
+package com.billing_service.exception;
+
+public class BillingException {
+
+}

@@ -1,0 +1,36 @@
+package com.usage_service.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.usage_service.dto.UsageLogDTO;
+import com.usage_service.entity.UsageLog;
+import com.usage_service.repository.UsageLogRepository;
+
+@Service
+public class UsageServiceImpl implements UsageService {
+
+    @Autowired
+    private UsageLogRepository repository;
+
+    @Override
+    public List<UsageLog> getUsageLogsForUser(String userId) {
+        return repository.findByUserId(userId);
+    }
+
+    @Override
+    public UsageLog saveUsageLog(UsageLogDTO dto) {
+        UsageLog usageLog = ((Object) UsageLog.builder())
+                .userId(dto.getUserId())
+                .date(dto.getDate())
+                .callDuration(dto.getCallDuration())
+                .dataUsed(dto.getDataUsed())
+                .smsCount(dto.getSmsCount())
+                .build();
+        return repository.save(usageLog);
+    }
+}{
+
+}

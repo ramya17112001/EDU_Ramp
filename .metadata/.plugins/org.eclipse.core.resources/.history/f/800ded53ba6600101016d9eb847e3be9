@@ -1,0 +1,16 @@
+package com.billing_service.strategy;
+
+import com.billing_service.dto.Plan;
+import com.billing_service.dto.Usage;
+
+public class PrepaidBillingStrategy implements BillingStrategy {
+    @Override
+    public double calculateBill(Usage usage, Plan plan) {
+        // Example: basic calculation, real logic would be plan rules.
+        double total = plan.getPrice();
+        double extraData = Math.max(0, usage.getDataUsed() - plan.getIncludedData());
+        double extraCharge = extraData * plan.getExtraDataRate();
+        return total + extraCharge;
+    }
+  
+} 

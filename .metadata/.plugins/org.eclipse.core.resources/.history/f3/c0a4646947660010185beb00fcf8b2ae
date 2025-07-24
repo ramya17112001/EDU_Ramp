@@ -1,0 +1,44 @@
+package com.usage_service.dto;
+import jakarta.validation.constraints.*;
+import lombok.*;
+
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+public class UsageLogRequest {
+	 @NotNull private Long userId;
+	  @NotNull private Integer callDuration;
+	  @NotNull private Integer dataUsedMb;
+	  @NotNull private Integer smsCount;
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	public Integer getCallDuration() {
+		return callDuration;
+	}
+	public void setCallDuration(Integer callDuration) {
+		this.callDuration = callDuration;
+	}
+	public Integer getDataUsedMb() {
+		return dataUsedMb;
+	}
+	public void setDataUsedMb(Integer dataUsedMb) {
+		this.dataUsedMb = dataUsedMb;
+	}
+	public Integer getSmsCount() {
+		return smsCount;
+	}
+	public void setSmsCount(Integer smsCount) {
+		this.smsCount = smsCount;
+	}
+	public UsageLogRequest(@NotNull Long userId, @NotNull Integer callDuration, @NotNull Integer dataUsedMb,
+			@NotNull Integer smsCount) {
+		super();
+		this.userId = userId;
+		this.callDuration = callDuration;
+		this.dataUsedMb = dataUsedMb;
+		this.smsCount = smsCount;
+	}
+	   
+}
