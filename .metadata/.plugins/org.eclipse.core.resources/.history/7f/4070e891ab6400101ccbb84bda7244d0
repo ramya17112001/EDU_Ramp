@@ -1,0 +1,20 @@
+package com.plan_service.entity;
+
+import java.math.BigDecimal;
+
+public class PlanBuilderTest {
+
+    public static void main(String[] args) {
+
+        Plan testPlan = Plan.builder()
+                .name("Test Plan")
+                .type(PlanType.PREPAID)
+                .price(new BigDecimal("99.99"))
+                .validityDays(28)
+                .features("Unlimited calls")
+                .build();
+
+        System.out.println(testPlan);
+    }
+    
+}

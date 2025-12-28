@@ -1,0 +1,6 @@
+package com.billing_service.strategy;
+
+public interface BillingStrategy {
+	double calculateBill(Usage usage, Plan plan);
+	
+} 

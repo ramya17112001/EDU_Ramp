@@ -1,0 +1,5 @@
+package com.auth_service.util;
+
+public class JwtTokenUtil {
+
+}

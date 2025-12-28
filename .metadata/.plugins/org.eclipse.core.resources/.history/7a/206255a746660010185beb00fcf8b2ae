@@ -1,0 +1,47 @@
+package com.usage_service.service;
+
+import java.time.LocalDate;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.usage_service.entity.UsageLog;
+
+@Service
+public class UsageLogSimulatorService {
+
+    @Autowired
+    private UsageService usageService;
+
+    private final ExecutorService executor = Executors.newFixedThreadPool(5);
+
+    // Simulate generating random usage logs for random users
+    public void simulateUsage() {
+        for (int i = 0; i < 10; i++) {
+            executor.submit(() -> {
+                UsageLog log = UsageLog.builder()
+                        .userId("user-" + (new Random().nextInt(10) + 1))  // simulate 10 users
+                        .date(LocalDate.now())
+                        .callDuration(new Random().nextInt(120))          // up to 2 hours call
+                        .dataUsed(new Random().nextDouble() * 500)        // up to 500MB data
+                        .smsCount(new Random().nextInt(50))               // up to 50 sms
+                        .build();
+                usageService.saveUsageLog(logToDto(log));
+            });
+        }
+    }
+
+    private  com.usage_service.dto.UsageLogDTO logToDto(UsageLog log) {
+    	  com.usage_service.dto.UsageLogDTO dto = new com.usage_service.dto.UsageLogDTO();
+    	    dto.setUserId(log.getUserId());
+         dto.setUserId(log.getUserId());
+        dto.setDate(log.getDate());
+        dto.setCallDuration(log.getCallDuration());
+        dto.setDataUsed(log.getDataUsed());
+        dto.setSmsCount(log.getSmsCount());
+        return dto;
+    }
+} 
+

@@ -1,0 +1,5 @@
+package com.plan_service.controller;
+
+public class PlanController {
+
+}

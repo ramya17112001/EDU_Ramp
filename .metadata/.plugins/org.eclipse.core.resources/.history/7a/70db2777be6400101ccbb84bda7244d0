@@ -1,0 +1,9 @@
+spring.application.name=user-service
+server.port=8080
+spring.datasource.url=jdbc:postgresql://localhost:3306/user_db
+spring.datasource.username=root
+spring.datasource.password=Kanny@2317
+spring.jpa.hibernate.ddl-auto=update
+ 
+
+

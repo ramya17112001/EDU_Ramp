@@ -1,0 +1,52 @@
+package com.usage_service.service;
+//import com.smarttelecom.usageservice.dto.*;
+//import com.smarttelecom.usageservice.entity.UsageLog;
+//import com.smarttelecom.usageservice.exception.UsageNotFoundException;
+//import com.smarttelecom.usageservice.repository.UsageLogRepository;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.usage_service.dto.UsageLogDTO;
+import com.usage_service.dto.UsageRequest;
+import com.usage_service.entity.UsageLog;
+import com.usage_service.exception.UsageNotFoundException;
+import com.usage_service.repository.UsageLogRepository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+@Service
+@RequiredArgsConstructor
+public class UsageService {
+	@Autowired
+	private  UsageLogRepository repo;
+	  private final ModelMapper mapper = new ModelMapper();
+
+	  public UsageLogDTO record(UsageRequest req) {
+		    UsageLog log = ((Object) UsageLog.builder())
+		       .userId(req.getUserId())
+	 	      .timestamp(LocalDateTime.now())
+		      .callDuration(req.getCallDuration())
+		       .dataUsedMb(req.getDataUsedMb())
+		      .smsCount(req.getSmsCount())
+		      .build();
+		    return mapper.map(repo.save(log), UsageLogDTO.class);
+		  }
+
+	  public List<UsageLogDTO> getByUser(Long userId) {
+	    return repo.findByUserId(userId).stream()
+	      .map(log -> mapper.map(log, UsageLogDTO.class))
+	      .collect(Collectors.toList());
+	  }
+
+	  public void delete(Long id) {
+	    if (!repo.existsById(id))
+	      throw new UsageNotFoundException(id);
+	    repo.deleteById(id);
+	  }
+	} 
+ 
+
+

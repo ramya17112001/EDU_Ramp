@@ -1,0 +1,66 @@
+package com.plan_service.service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import com.plan_service.dto.PlanDTO;
+import com.plan_service.dto.PlanRequest;
+import com.plan_service.entity.Plan;
+import com.plan_service.entity.PlanType;
+import com.plan_service.exception.PlanNotFoundException;
+import com.plan_service.factory.PlanFactory;
+import com.plan_service.repository.PlanRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class PlanService {
+	private final PlanRepository planRepository;
+    private final PlanFactory planFactory;
+    private final ModelMapper modelMapper;
+
+    public PlanDTO addPlan(PlanRequest request) {
+        Plan plan = planFactory.createPlan(request);
+        Plan saved = planRepository.save(plan);
+        return modelMapper.map(saved, PlanDTO.class);
+    }
+
+    public List<PlanDTO> getAllPlans() {
+        return planRepository.findAll().stream()
+                .map(plan -> modelMapper.map(plan, PlanDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public PlanDTO getPlanById(Long id) {
+        Plan plan = planRepository.findById(id)
+                .orElseThrow(() -> new PlanNotFoundException("Plan not found with id: " + id));
+        return modelMapper.map(plan, PlanDTO.class);
+    }
+
+    public PlanDTO updatePlan(Long id, PlanRequest request) {
+        Plan existing = planRepository.findById(id)
+                .orElseThrow(() -> new PlanNotFoundException("Plan not found with id: " + id));
+
+        existing.setName(request.getName());
+        //existing.setType(request.getType());
+        existing.setType(PlanType.valueOf(request.getType().toUpperCase())); // ✅ safely convert String to Enum
+
+        existing.setPrice(request.getPrice());
+        existing.setValidityDays(request.getValidityDays());
+        existing.setFeatures(request.getFeatures());
+
+        Plan updated = planRepository.save(existing);
+        return modelMapper.map(updated, PlanDTO.class);
+    }
+
+    public void deletePlan(Long id) {
+        if (!planRepository.existsById(id)) {
+            throw new PlanNotFoundException("Plan not found with id: " + id);
+        }
+        planRepository.deleteById(id);
+    }
+}

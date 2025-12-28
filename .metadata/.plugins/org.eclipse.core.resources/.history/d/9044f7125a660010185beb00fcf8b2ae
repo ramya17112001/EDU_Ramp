@@ -1,0 +1,64 @@
+package com.user_service.service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.user_service.dto.PlanUsageSummaryDto;
+//import com.user_service.dto.UpdatePlanRequest;
+import com.user_service.dto.UserUpdateRequest;
+//import com.user_service.dto.UserDTO;
+import com.user_service.dto.UserDto;
+//import com.user_service.dto.UserRequest;
+import com.user_service.exception.UserNotFoundException;
+import com.user_service.model.User;
+import com.user_service.repository.UserRepository;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+ 
+@Service
+
+public class UserService {
+	@Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public UserDto getCurrentUser(String email) {
+        User user = userRepository.findByEmail(email)
+             .orElseThrow(() -> new UserNotFoundException("User not found"));
+       return modelMapper.map(user, UserDto.class);
+    }
+   
+ 
+    public UserDto updateUser(Long userId, UserUpdateRequest request) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException("User not found"));
+        user.setName(request.getName());
+         user.setPhone(request.getPhone());
+        user.setPlanId(request.getPlanId());
+        userRepository.save(user);
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    public PlanUsageSummaryDto getPlanUsageSummary(Long userId) {
+        // This method would normally call the Usage Tracking Service.
+        // Here is a stub/placeholder:
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException("User not found"));
+        return new PlanUsageSummaryDto(user.getId(), user.getPlanId(), "Sample Plan", "{\"data\": \"sample usage\"}");
+    }
+}

@@ -1,0 +1,5 @@
+package com.usage_service.service;
+
+public class UsageServiceImpl {
+
+}

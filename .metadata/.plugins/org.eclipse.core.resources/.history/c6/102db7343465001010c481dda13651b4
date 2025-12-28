@@ -1,0 +1,5 @@
+package com.billing_service.repository;
+
+public interface BillRepository {
+
+}

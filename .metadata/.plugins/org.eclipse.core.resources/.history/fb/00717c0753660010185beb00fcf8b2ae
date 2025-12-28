@@ -1,0 +1,56 @@
+package com.billing_service.service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.billing_service.dto.BillDto;
+import com.billing_service.dto.BillSummaryDto;
+import com.billing_service.entity.Bill;
+import com.billing_service.exception.BillNotFoundException;
+//import com.billing_service.dto.BillSummaryDto;
+//import com.billing_service.entity.Bill;
+//import com.billing_service.exception.BillNotFoundException;
+// import com.billing_service.exception.BillingNotFoundException;
+import com.billing_service.repository.BillRepository;
+
+@Service
+public class BillingService {
+	@Autowired
+    private BillRepository billRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public BillDto generateBill(Long userId, Double amount, String details) {
+        Bill bill = new Bill(userId, amount, new Date(), details);
+        bill = billRepository.save(bill);
+        return modelMapper.map(bill, BillDto.class);
+    }
+
+    public List<BillSummaryDto> getBillingHistory(Long userId) {
+        List<Bill> bills = billRepository.findByUserId(userId);
+        return bills.stream()
+                .map(b -> {
+                    BillSummaryDto dto = new BillSummaryDto();
+                    dto.setBillId(b.getId());
+                    dto.setTotalAmount(b.getTotalAmount());
+                    dto.setBillDate(b.getBillDate());
+                    return dto;
+                }) 
+                .collect(Collectors.toList());
+    }
+
+    public BillDto getBillById(Long billId) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new BillNotFoundException("Bill not found: " + billId));
+        return modelMapper.map(bill, BillDto.class);
+    }   
+}	 

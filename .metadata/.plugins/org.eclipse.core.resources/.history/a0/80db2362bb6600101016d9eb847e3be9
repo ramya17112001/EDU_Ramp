@@ -1,0 +1,19 @@
+package com.billing_service;
+
+public abstract class BillingTemplate {
+	public double generate(Usage usage, Plan plan) {
+        preProcess(usage, plan);
+        double amount = calculateAmount(usage, plan);
+        postProcess(amount);
+        return amount;
+    }
+    protected void preProcess(Usage usage, Plan plan) {
+        // Optional: logging, validation, etc.
+    }
+    protected abstract double calculateAmount(Usage usage, Plan plan);
+    protected void postProcess(double amount) {
+        // Optional: hooks, logging, etc.
+    }
+
+}
+ 

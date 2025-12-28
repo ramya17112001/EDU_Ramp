@@ -1,0 +1,13 @@
+package com.usage_service.service;
+
+import java.util.List;
+
+import com.usage_service.dto.UsageLogDTO;
+import com.usage_service.entity.UsageLog;
+
+public interface UsageService {
+	 List<UsageLog> getUsageLogsForUser(String userId);
+	    UsageLog saveUsageLog(UsageLogDTO dto);
+		void deleteUsageLog(String id);
+	 
+}

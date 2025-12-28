@@ -1,0 +1,179 @@
+package com.user_service.controller;
+//package com.smarttelecom.userservice.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.user_service.dto.UpdatePlanRequest;
+import com.user_service.dto.UserDto;
+import com.user_service.dto.UserRequest;
+import com.user_service.model.User;
+import com.user_service.service.UserService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
+public class UserController {
+	 @Autowired
+	    private UserService service;
+
+	    // 🔹 Create a new user from UserRequest and return UserDTO
+	    @PostMapping
+	    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserRequest req) {
+	        User createdUser = service.create(req);
+	        return new ResponseEntity<>(convertToDTO(createdUser), HttpStatus.CREATED);
+	    }
+
+	    // 🔹 Get a user by ID and return DTO
+	    @GetMapping("/{id}")
+	    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
+	        return ResponseEntity.ok(convertToDTO(service.getById(id)));
+	    }
+
+	    // 🔹 Get all users (admin only)
+	    @GetMapping("/all")
+	    @PreAuthorize("hasRole('ADMIN')")
+	    public ResponseEntity<List<UserDto>> getAllUsers() {
+	        List<User> users = service.getAll();
+	        List<UserDto> dtos = users.stream().map(this::convertToDTO).collect(Collectors.toList());
+	        return ResponseEntity.ok(dtos);
+	    }
+
+	    // 🔹 Update a user's plan
+	    @PutMapping("/plan")
+	    @PreAuthorize("hasRole('CUSTOMER')")
+	    public ResponseEntity<UserDto> updatePlan(@RequestBody UpdatePlanRequest req) {
+	        User updated = service.updatePlan(req);
+	        return ResponseEntity.ok(convertToDTO(updated));
+	    }
+
+	    // 🔹 Delete a user by ID
+	    @DeleteMapping("/{id}")
+	    @PreAuthorize("hasRole('ADMIN')")
+	    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+	        service.deleteUser(id);
+	        return ResponseEntity.ok("User deleted successfully");
+	    } 
+
+	    // 🔁 Utility method to convert User model to UserDTO
+	    private UserDto convertToDTO(User user) {
+	        return new UserDto(
+	            user.getId(),
+	            user.getName(),
+	            user.getEmail(),
+	            user.getPhone(),
+	            user.getRole(),
+	            user.getPlanId()
+	        );
+	    }
+	
+}
+//	@Autowired private UserService service;
+//
+//	  @GetMapping("/{id}")
+//	  public UserDTO getUser(@PathVariable Long id) {
+//	    return service.getById(id);
+//	  }
+//
+//	  @GetMapping("/all")
+//	  @PreAuthorize("hasRole('ADMIN')")
+//	  public List<UserDTO> getAllUsers() {
+//	    return service.getAll();
+//	  }
+//
+//	  @PutMapping("/plan")
+//	  @PreAuthorize("hasRole('CUSTOMER')")
+//	  public UserDTO updatePlan(@RequestBody UpdatePlanRequest req) {
+//	    return service.updatePlan(req);
+//	  }
+//
+//	  @DeleteMapping("/{id}")
+//	  @PreAuthorize("hasRole('ADMIN')")
+//	  public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+//	    service.delete(id);
+//	    return ResponseEntity.ok("User deleted");
+//	  } 
+//	}
+
+//	private final UserService svc; 
+//	 
+//	
+//	 @Autowired   
+//	    public UserController(UserService svc) {
+//	        this.svc = svc;
+//	    }
+//    @PostMapping("/add")
+//    public ResponseEntity<UserDTO> create(@Valid @RequestBody UserRequest req) {
+//        UserDTO createdUser = svc.create(req);
+//        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+//    }
+// 
+//    @GetMapping("/all")
+//    public ResponseEntity<List<UserDTO>> list() {
+//        return ResponseEntity.ok(svc.findAll());
+//    }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<UserDTO> get(@PathVariable Long id) {
+//        return ResponseEntity.ok(svc.findById(id));
+//    } 
+//  
+//    @PutMapping("/{id}/plan")
+//    public ResponseEntity<UserDTO> updatePlan(@PathVariable Long id,
+//                                              @Valid @RequestBody UpdatePlanRequest req) {
+//        return ResponseEntity.ok(svc.updatePlan(id, req));
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> delete(@PathVariable Long id) {
+//        svc.delete(id);
+//        return ResponseEntity.noContent().build();
+//     }
+//}
+
+
+//	  @PostMapping
+//	  public ResponseEntity<UserDTO> create(@Valid @RequestBody UserRequest req) {
+//	    return new ResponseEntity<>(svc.create(req), HttpStatus.CREATED);
+//	  }
+//
+//	  @GetMapping("/all")
+//	  public List<UserDTO> list() {
+//	    return svc.findAll();
+//	  }
+//
+//	  @GetMapping("/{id}")
+//	  public UserDTO get(@PathVariable Long id) {
+//	    return svc.findById(id);
+//	  }
+//
+//	  @PutMapping("/{id}/plan")
+//	  public UserDTO updatePlan(@PathVariable Long id, @Valid @RequestBody UpdatePlanRequest req) {
+//	    return svc.updatePlan(id, req);
+//
+//   
+//}
+//
+//@DeleteMapping("/{id}")
+//public ResponseEntity<Void> delete(@PathVariable Long id) {
+//  svc.delete(id);
+//  return ResponseEntity.noContent().build();
+//}
+//}
+//
+//    

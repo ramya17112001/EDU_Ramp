@@ -1,0 +1,34 @@
+package com.gatewayT_service.config;
+
+import org.springframework.cloud.gateway.filter.factory.AbstractChangeRequestUriGatewayFilterFactory;
+import org.springframework.stereotype.Component;
+
+@Component
+public class JwtAuthFilter extends AbstractChangeRequestUriGatewayFilterFactory<Object> {
+
+    private static final String AUTH_HEADER = "Authorization";
+    private static final String PREFIX = "Bearer ";
+    private final String SECRET = "your_jwt_secret";
+
+    @Override
+    public GatewayFilter apply(Object config) {
+        return (exchange, chain) -> {
+            String header = exchange.getRequest().getHeaders().getFirst(AUTH_HEADER);
+            if (header == null || !header.startsWith(PREFIX)) {
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                return exchange.getResponse().setComplete();
+            }
+
+            String token = header.replace(PREFIX, "");
+            try {
+                Jwts.parserBuilder().setSigningKey(Keys.hmacShaKeyFor(SECRET.getBytes())).build().parseClaimsJws(token);
+                return chain.filter(exchange);
+            } catch (JwtException e) {
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                return exchange.getResponse().setComplete();
+            }
+        };
+    }
+
+
+}

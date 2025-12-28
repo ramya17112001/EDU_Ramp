@@ -1,0 +1,39 @@
+package com.usage_service.service;
+
+import java.time.LocalDateTime;
+import java.util.concurrent.ThreadLocalRandom;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import com.usage_service.entity.UsageLog;
+import com.usage_service.repository.UsageLogRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class SchedulerService {
+	
+	private static final Logger log = LoggerFactory.getLogger(SchedulerService.class);
+	@Autowired
+ 	  private UsageLogRepository repo;
+
+	  @Scheduled(fixedRate = 60000)  // every 60s
+	  public void simulateUsage() {
+	    Long userId = ThreadLocalRandom.current().nextLong(1, 6);
+	    repo.save(UsageLog.builder()
+	      .userId(userId)
+	      .timestamp(LocalDateTime.now())
+	      .callDuration(ThreadLocalRandom.current().nextInt(0, 60))
+	      .dataUsedMb(ThreadLocalRandom.current().nextInt(0, 500))
+	      .smsCount(ThreadLocalRandom.current().nextInt(0, 20))
+	      .build());
+	    log.info("Simulated usage for user " + userId);
+	  }
+	
+  
+}

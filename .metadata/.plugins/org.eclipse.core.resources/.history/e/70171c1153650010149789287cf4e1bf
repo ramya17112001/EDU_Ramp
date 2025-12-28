@@ -1,0 +1,5 @@
+package com.GatewayT_service.config;
+
+public class GatewayConfig {
+
+}

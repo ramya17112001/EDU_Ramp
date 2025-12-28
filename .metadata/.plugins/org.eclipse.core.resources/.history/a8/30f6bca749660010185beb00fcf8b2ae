@@ -1,0 +1,14 @@
+spring.application.name=usage-service
+# Server Port
+server.port=8086
+
+# Application Name
+spring.application.name=usage-service
+
+# MongoDB
+spring.data.mongodb.uri=mongodb://localhost:27017/telecom
+
+# Eureka Client
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+eureka.client.register-with-eureka=true
+eureka.client.fetch-registry=true
